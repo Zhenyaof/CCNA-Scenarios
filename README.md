@@ -223,3 +223,95 @@ This guide combines configuring VLANs, trunking, inter-VLAN routing, and EtherCh
 - **Inter-VLAN Routing**: This allows devices in different VLANs to communicate with each other through a router or Layer 3 switch.
 - **EtherChannel**: EtherChannel aggregates multiple physical links to increase bandwidth and provide redundancy for critical links.
 
+Here’s a unified **Cisco DHCP configuration** guide covering both **Basic DHCPv4** and **DHCP Implementation** on routers and switches.  
+
+---
+
+# Scenarios 6 and 7 Summary 
+
+This guide covers configuring **Basic DHCPv4** and **Full DHCP Implementation** on Cisco devices to automatically assign IP addresses to clients.  
+
+## Key Steps  
+
+### 1. **Enable and Configure a DHCP Server on a Router**  
+   Define a DHCP pool and specify key parameters:  
+
+   ```bash
+   configure terminal
+   ip dhcp excluded-address 192.168.1.1 192.168.1.10  # Exclude static IPs
+
+   ip dhcp pool LAN
+   network 192.168.1.0 255.255.255.0
+   default-router 192.168.1.1
+   dns-server 8.8.8.8
+   lease 7  # Lease time (days)
+   ```
+
+### 2. **Verify DHCP Pool and Active Leases**  
+   Check configured DHCP pools:  
+
+   ```bash
+   show ip dhcp pool
+   ```
+
+   View assigned IPs and active leases:  
+
+   ```bash
+   show ip dhcp binding
+   ```
+
+### 3. **Enable DHCP Relay (If DHCP Server is on Another Network)**  
+   If the DHCP server is not on the same network as clients, configure the router interface as a relay:  
+
+   ```bash
+   interface gigabitEthernet 0/0
+   ip helper-address <dhcp_server_ip>
+   ```
+
+### 4. **Configure a Switch to Forward DHCP Requests**  
+   If using a switch, enable **DHCP Snooping** for security and to prevent rogue DHCP servers:  
+
+   ```bash
+   configure terminal
+   ip dhcp snooping
+   ip dhcp snooping vlan 1
+   interface gigabitEthernet 0/1
+   ip dhcp snooping trust
+   ```
+
+### 5. **Verify DHCP Relay and Snooping**  
+   Check relay status:  
+
+   ```bash
+   show ip interface <interface_name>
+   ```
+
+   Check DHCP snooping status:  
+
+   ```bash
+   show ip dhcp snooping
+   ```
+
+### 6. **Test DHCP Assignment**  
+   On a client device, ensure it gets an IP automatically:
+
+   ```bash
+   ipconfig /renew   # (Windows)
+   ```
+
+   or  
+
+   ```bash
+   dhclient eth0   # (Linux)
+   ```
+
+---
+
+## Why Use DHCP?  
+
+- **Automates IP Address Management**: Eliminates the need for manual IP assignments.  
+- **Efficient and Scalable**: Ideal for large networks where devices frequently connect and disconnect.  
+- **Supports Centralized IP Management**: With DHCP relay, a single DHCP server can serve multiple subnets.  
+- **Improves Security**: Features like DHCP snooping prevent unauthorized DHCP servers from assigning incorrect IPs.  
+
+
