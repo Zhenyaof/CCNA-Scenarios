@@ -65,3 +65,46 @@ This guide provides the necessary steps to configure and secure SSH access on Ci
    ```bash
    no transport input telnet
    ```
+
+# Cisco IPv6 Configuration Summary
+
+This guide covers how to configure IPv6 on Cisco devices, enabling IPv6 routing and assigning IPv6 addresses to interfaces.
+
+## Key Steps
+
+1. **Enable IPv6 Routing**  
+   First, ensure IPv6 routing is enabled on the device:
+
+   ```bash
+   configure terminal
+   ipv6 unicast-routing
+   ```
+
+2. **Assign IPv6 Address to an Interface**  
+   Enable IPv6 on the desired interface by assigning an IPv6 address:
+
+   ```bash
+   interface <interface_name>
+   ipv6 address <ipv6_address>/64
+   no shutdown
+   ```
+
+3. **Enable IPv6 on Multiple Interfaces (Optional)**  
+   If you have more interfaces that need IPv6 configuration, repeat the above step for each.
+
+4. **Check IPv6 Configuration**  
+   To verify that IPv6 has been properly configured on the device:
+
+   ```bash
+   show ipv6 interface brief
+   ```
+
+5. **Configure IPv6 Static Routing (Optional)**  
+   If static routing is needed, configure IPv6 routes:
+
+   ```bash
+   ipv6 route <destination_network> <next_hop_ipv6_address>
+   ```
+
+## Why Use IPv6?
+IPv6 is necessary due to the limitations of IPv4 addressing, with its finite number of available IP addresses. IPv6 offers a vast address space (allowing for trillions of unique addresses), better security features (like mandatory IPsec), and improved routing efficiency. It's essential for supporting the growing number of devices and services connected to the internet.
