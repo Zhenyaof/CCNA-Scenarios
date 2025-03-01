@@ -223,17 +223,17 @@ This guide combines configuring VLANs, trunking, inter-VLAN routing, and EtherCh
 - **Inter-VLAN Routing**: This allows devices in different VLANs to communicate with each other through a router or Layer 3 switch.
 - **EtherChannel**: EtherChannel aggregates multiple physical links to increase bandwidth and provide redundancy for critical links.
 
-Here’s a unified **Cisco DHCP configuration** guide covering both **Basic DHCPv4** and **DHCP Implementation** on routers and switches.  
+
+
+# Scenarios 6 and 7 Summary
+
+This guide covers **Basic DHCPv4**, **Full DHCP Implementation**, and **Stateless & Stateful DHCPv6** to dynamically assign IP addresses in both IPv4 and IPv6 networks.  
 
 ---
 
-# Scenarios 6 and 7 Summary 
+##  1. Configuring DHCPv4  
 
-This guide covers configuring **Basic DHCPv4** and **Full DHCP Implementation** on Cisco devices to automatically assign IP addresses to clients.  
-
-## Key Steps  
-
-### 1. **Enable and Configure a DHCP Server on a Router**  
+### **1.1 Enable and Configure a DHCP Server on a Router**  
    Define a DHCP pool and specify key parameters:  
 
    ```bash
@@ -247,7 +247,7 @@ This guide covers configuring **Basic DHCPv4** and **Full DHCP Implementation** 
    lease 7  # Lease time (days)
    ```
 
-### 2. **Verify DHCP Pool and Active Leases**  
+### **1.2 Verify DHCP Pool and Active Leases**  
    Check configured DHCP pools:  
 
    ```bash
@@ -260,7 +260,7 @@ This guide covers configuring **Basic DHCPv4** and **Full DHCP Implementation** 
    show ip dhcp binding
    ```
 
-### 3. **Enable DHCP Relay (If DHCP Server is on Another Network)**  
+### **1.3 Enable DHCP Relay (If DHCP Server is on Another Network)**  
    If the DHCP server is not on the same network as clients, configure the router interface as a relay:  
 
    ```bash
@@ -268,50 +268,66 @@ This guide covers configuring **Basic DHCPv4** and **Full DHCP Implementation** 
    ip helper-address <dhcp_server_ip>
    ```
 
-### 4. **Configure a Switch to Forward DHCP Requests**  
-   If using a switch, enable **DHCP Snooping** for security and to prevent rogue DHCP servers:  
+---
+
+##  2. Configuring Stateless & Stateful DHCPv6  
+
+### **2.1 Enable IPv6 Routing**  
+   IPv6 routing must be enabled for DHCPv6 to function:  
 
    ```bash
    configure terminal
-   ip dhcp snooping
-   ip dhcp snooping vlan 1
+   ipv6 unicast-routing
+   ```
+
+### **2.2 Configure Stateful DHCPv6** (Similar to DHCPv4 - Assigns Full IP Address + Other Configurations)  
+   - Clients get their **IPv6 address + default gateway + DNS from the DHCPv6 server**  
+   - Used when the router **does not** provide SLAAC-based addressing  
+
+   ```bash
+   ipv6 dhcp pool DHCPv6-STATEFUL
+   address prefix 2001:DB8:1:1::/64
+   dns-server 2001:4860:4860::8888
+   ```
+
+   Apply to an interface:  
+
+   ```bash
    interface gigabitEthernet 0/1
-   ip dhcp snooping trust
+   ipv6 address 2001:DB8:1:1::1/64
+   ipv6 dhcp server DHCPv6-STATEFUL
    ```
 
-### 5. **Verify DHCP Relay and Snooping**  
-   Check relay status:  
+### **2.3 Configure Stateless DHCPv6** (Clients Get Only Additional Info, Not an IP)  
+   - **IPv6 address is assigned via SLAAC (Router Advertisement)**
+   - DHCPv6 only provides **DNS server information**  
 
    ```bash
-   show ip interface <interface_name>
+   ipv6 dhcp pool DHCPv6-STATELESS
+   dns-server 2001:4860:4860::8888
    ```
 
-   Check DHCP snooping status:  
+   Apply to an interface:  
 
    ```bash
-   show ip dhcp snooping
+   interface gigabitEthernet 0/1
+   ipv6 address 2001:DB8:1:1::1/64
+   ipv6 nd other-config-flag  # Enables Stateless DHCPv6
+   ipv6 dhcp server DHCPv6-STATELESS
    ```
 
-### 6. **Test DHCP Assignment**  
-   On a client device, ensure it gets an IP automatically:
-
+### **2.4 Verify DHCPv6 Configuration**  
    ```bash
-   ipconfig /renew   # (Windows)
-   ```
-
-   or  
-
-   ```bash
-   dhclient eth0   # (Linux)
+   show ipv6 dhcp pool
+   show ipv6 interface brief
    ```
 
 ---
 
 ## Why Use DHCP?  
 
-- **Automates IP Address Management**: Eliminates the need for manual IP assignments.  
-- **Efficient and Scalable**: Ideal for large networks where devices frequently connect and disconnect.  
-- **Supports Centralized IP Management**: With DHCP relay, a single DHCP server can serve multiple subnets.  
-- **Improves Security**: Features like DHCP snooping prevent unauthorized DHCP servers from assigning incorrect IPs.  
-
+- **IPv4: Automates IP Address Management** → Eliminates manual IP assignments.  
+- **IPv6 Stateless (SLAAC + DHCPv6)** → Only gives clients DNS info while letting routers handle addressing.  
+- **IPv6 Stateful (Full DHCPv6)** → Works like DHCPv4, assigning full addresses + other config data.  
+- **Supports Centralized IP Management** → A single DHCP server can serve multiple subnets via relay.  
 
