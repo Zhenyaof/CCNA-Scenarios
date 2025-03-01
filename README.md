@@ -66,7 +66,7 @@ This guide provides the necessary steps to configure and secure SSH access on Ci
    no transport input telnet
    ```
 
-# Cisco IPv6 Configuration Summary
+# Scenario 2 Summary
 
 This guide covers how to configure IPv6 on Cisco devices, enabling IPv6 routing and assigning IPv6 addresses to interfaces.
 
@@ -108,3 +108,118 @@ This guide covers how to configure IPv6 on Cisco devices, enabling IPv6 routing 
 
 ## Why Use IPv6?
 IPv6 is necessary due to the limitations of IPv4 addressing, with its finite number of available IP addresses. IPv6 offers a vast address space (allowing for trillions of unique addresses), better security features (like mandatory IPsec), and improved routing efficiency. It's essential for supporting the growing number of devices and services connected to the internet.
+
+
+# Scenarios 3 , 4 , 5 Summary
+
+This guide combines configuring VLANs, trunking, inter-VLAN routing, and EtherChannel on Cisco devices. It covers the key steps for setting up VLANs, 802.1Q trunking, inter-VLAN routing, and EtherChannel for load balancing and redundancy.
+
+## Key Steps
+
+### 1. **Configure VLANs**  
+   First, create the required VLANs on the switch:
+
+   ```bash
+   configure terminal
+   vlan 10
+   name Sales
+   vlan 20
+   name Marketing
+   ```
+
+   Repeat the above steps for all VLANs you need to configure.
+
+### 2. **Assign VLANs to Switch Ports**  
+   Assign VLANs to specific switch ports. For example:
+
+   ```bash
+   interface range fastethernet 0/1 - 10
+   switchport mode access
+   switchport access vlan 10
+   ```
+
+   Repeat for other ports and VLANs.
+
+### 3. **Configure 802.1Q Trunking on Switch Ports**  
+   To allow multiple VLANs to pass between switches, configure trunking on the interfaces that connect the switches:
+
+   ```bash
+   interface gigabitEthernet 0/1
+   switchport mode trunk
+   switchport trunk encapsulation dot1q
+   ```
+
+   This will configure the port for 802.1Q trunking.
+
+### 4. **Configure Router for Inter-VLAN Routing**  
+   Enable routing on a router (or Layer 3 switch) to route traffic between VLANs. This is typically done by creating sub-interfaces for each VLAN:
+
+   ```bash
+   interface gigabitEthernet 0/0.10
+   encapsulation dot1Q 10
+   ip address 192.168.10.1 255.255.255.0
+
+   interface gigabitEthernet 0/0.20
+   encapsulation dot1Q 20
+   ip address 192.168.20.1 255.255.255.0
+   ```
+
+   The router will now be able to route traffic between VLAN 10 and VLAN 20.
+
+### 5. **Configure EtherChannel for Link Aggregation**  
+   EtherChannel provides load balancing and redundancy by bundling multiple physical links into a single logical link. Configure EtherChannel on both switches:
+
+   ```bash
+   interface range gigabitEthernet 0/1 - 2
+   channel-group 1 mode active
+   ```
+
+   On the other switch:
+
+   ```bash
+   interface range gigabitEthernet 0/1 - 2
+   channel-group 1 mode active
+   ```
+
+   This will configure the EtherChannel using LACP (Link Aggregation Control Protocol) for automatic negotiation.
+
+### 6. **Verify Configuration**  
+   Check VLAN configuration:
+
+   ```bash
+   show vlan brief
+   ```
+
+   Verify trunking:
+
+   ```bash
+   show interfaces trunk
+   ```
+
+   Verify Inter-VLAN Routing:
+
+   ```bash
+   ping 192.168.10.1
+   ping 192.168.20.1
+   ```
+
+   Verify EtherChannel:
+
+   ```bash
+   show etherchannel summary
+   ```
+
+### 7. **Optional: Configure Spanning Tree Protocol (STP) to Avoid Loops**  
+   If needed, configure STP to prevent loops in the network. This is automatically enabled, but you can adjust it as needed:
+
+   ```bash
+   spanning-tree vlan 10 priority 4096
+   ```
+
+## Why Use These Configurations?
+
+- **VLANs**: VLANs help segment network traffic, improve security, and reduce congestion by isolating traffic based on departments or functions (e.g., Sales, Marketing).
+- **Trunking**: 802.1Q trunking allows multiple VLANs to pass over a single link, making it efficient for interconnecting switches.
+- **Inter-VLAN Routing**: This allows devices in different VLANs to communicate with each other through a router or Layer 3 switch.
+- **EtherChannel**: EtherChannel aggregates multiple physical links to increase bandwidth and provide redundancy for critical links.
+
