@@ -1,5 +1,10 @@
 # CCNA Scenarios
 
+# About This Repository
+
+Welcome to the CCNA Scenarios repository, a resource for networking enthusiasts, students, and professionals to practice CCNA-level concepts. It includes **lab scenarios**, **configuration examples**, and **troubleshooting exercises** to enhance networking skills. Users can also find **subnetting practice** and **routing & switching concepts** like VLANs and STP. This repository is ideal for **CCNA candidates**, **networking students**, and **IT professionals**. Labs can be run on **Cisco Packet Tracer, GNS3, or EVE-NG** by following provided instructions. Contributions are encouraged through **pull requests and issue submissions**.
+
+
 # Scenario 1 Summary
 
 This guide provides the necessary steps to configure and secure SSH access on Cisco devices, including key generation, configuration, and enabling secure remote management.
