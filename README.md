@@ -3,6 +3,10 @@
 # About This Repository
 
 Welcome to the CCNA Scenarios repository, a resource for networking enthusiasts, students, and professionals to practice CCNA-level concepts. It includes **lab scenarios**, **configuration examples**, and **troubleshooting exercises** to enhance networking skills. Users can also find **subnetting practice** and **routing & switching concepts** like VLANs and STP. This repository is ideal for **CCNA candidates**, **networking students**, and **IT professionals**. Labs can be run on **Cisco Packet Tracer, GNS3, or EVE-NG** by following provided instructions. Contributions are encouraged through **pull requests and issue submissions**.
+**Important Notice**
+
+This repository contains the IP addresses used in scenarios, along with their passwords. Please make sure you handle this information correctly and use it for learning purposes.
+
 
 
 # Scenario 1 Summary
