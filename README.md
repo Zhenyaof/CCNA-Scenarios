@@ -445,3 +445,58 @@ This guide details the configuration of a wireless network, covering router logi
 A properly configured wireless network enhances security, prevents unauthorized access, and ensures reliable connectivity for devices.
 
 
+# Scenario 10 Summary
+
+This guide explains how to configure static and default routes on Cisco devices to ensure proper network connectivity and traffic forwarding.
+
+## Key Steps
+
+### Part 1: Configure Static Routes
+- Enter global configuration mode:
+  ```sh
+  configure terminal
+  ```
+- Define a static route:
+  ```sh
+  ip route <destination_network> <subnet_mask> <next_hop_ip>
+  ```
+- Example:
+  ```sh
+  ip route 192.168.2.0 255.255.255.0 192.168.1.1
+  ```
+- Exit configuration mode and save settings:
+  ```sh
+  end
+  write memory
+  ```
+
+### Part 2: Configure a Default Route
+- Configure a default route to forward unknown traffic to a specified gateway:
+  ```sh
+  ip route 0.0.0.0 0.0.0.0 <next_hop_ip>
+  ```
+- Example:
+  ```sh
+  ip route 0.0.0.0 0.0.0.0 192.168.1.254
+  ```
+- Save the configuration.
+
+### Part 3: Verify Routing Configuration
+- Display the routing table:
+  ```sh
+  show ip route
+  ```
+- Test connectivity using ping:
+  ```sh
+  ping <destination_ip>
+  ```
+- If issues occur, use:
+  ```sh
+  traceroute <destination_ip>
+  ```
+
+## Why Configure Static and Default Routes?
+Static and default routes provide manual control over network traffic, ensuring efficient and predictable routing, particularly in smaller networks where dynamic routing is unnecessary. They help optimize traffic flow and maintain connectivity in environments without frequent topology changes.
+
+
+
