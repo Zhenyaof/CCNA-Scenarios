@@ -338,5 +338,80 @@ This guide covers **Basic DHCPv4**, **Full DHCP Implementation**, and **Stateles
 - **IPv4: Automates IP Address Management** → Eliminates manual IP assignments.  
 - **IPv6 Stateless (SLAAC + DHCPv6)** → Only gives clients DNS info while letting routers handle addressing.  
 - **IPv6 Stateful (Full DHCPv6)** → Works like DHCPv4, assigning full addresses + other config data.  
-- **Supports Centralized IP Management** → A single DHCP server can serve multiple subnets via relay.  
+- **Supports Centralized IP Management** → A single DHCP server can serve multiple subnets via relay.
+
+
+# Scenario 8 Summary
+
+This guide covers how to configure and secure switchports using VLAN trunking (802.1Q) and various security best practices. The implementation includes configuring access ports, securing unused switchports, applying port security measures, enabling DHCP snooping, and deploying PortFast with BPDU Guard. The final step ensures verification of end-to-end connectivity.
+
+## Key Steps
+
+### Implement 802.1Q Trunking
+Configure VLAN trunks to allow traffic from multiple VLANs:
+```sh
+interface GigabitEthernet1/0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+ switchport trunk native vlan 99
+```
+
+### Configure Access Ports
+Assign switchports to specific VLANs:
+```sh
+interface GigabitEthernet1/0/2
+ switchport mode access
+ switchport access vlan 10
+ switchport nonegotiate
+```
+
+### Secure and Disable Unused Switchports
+Shut down unused ports to prevent unauthorized access:
+```sh
+interface range GigabitEthernet1/0/10-24
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+```
+
+### Implement Port Security
+Enable MAC address restrictions on access ports:
+```sh
+interface GigabitEthernet1/0/3
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+```
+
+### Implement DHCP Snooping Security
+Prevent rogue DHCP servers and mitigate address spoofing:
+```sh
+ip dhcp snooping
+ip dhcp snooping vlan 10,20,30
+interface GigabitEthernet1/0/1
+ ip dhcp snooping trust
+```
+
+### Implement PortFast and BPDU Guard
+Enable PortFast on access ports to speed up network convergence:
+```sh
+interface GigabitEthernet1/0/4
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+```
+
+### Verify End-to-End Connectivity
+Check configuration and connectivity status:
+```sh
+show vlan brief
+show interfaces trunk
+show port-security
+show dhcp snooping binding
+show spanning-tree summary
+```
+
+## Why Secure Switchports?
+Switch security ensures network integrity by preventing unauthorized access, mitigating risks like rogue DHCP servers, and protecting against accidental or malicious topology changes. Implementing these measures enhances overall network stability and security.
+
 
