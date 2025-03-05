@@ -415,3 +415,33 @@ show spanning-tree summary
 Switch security ensures network integrity by preventing unauthorized access, mitigating risks like rogue DHCP servers, and protecting against accidental or malicious topology changes. Implementing these measures enhances overall network stability and security.
 
 
+
+# Scenario 9 Summary
+
+This guide details the configuration of a wireless network, covering router login, SSID and security setup, DHCP configuration, administrative credential updates, client connection, and optional access point integration.
+
+## Key Steps
+
+### Part 1: Log into the Wireless Router
+- Connect the computer to the router via Ethernet.
+- Configure the computer’s IP to match the router’s default network.
+- Access the router's web interface using its IP address and login credentials.
+
+### Part 2: Configure Basic Wireless Settings
+- **SSID Setup**: Set the network name to `CCNAlab`.
+- **Security**: Enable WPA2 with AES encryption and use `Cisco12345!` as the password.
+- **DHCP Settings**: Assign the router’s IP, enable DHCP, and define the address range.
+- **Admin Password**: Change the default password to `Cisco123!` and re-login.
+
+### Part 3: Connect a Wireless Client
+- Plug in a wireless adapter, connect to `CCNAlab`, and enter the Wi-Fi password.
+- Verify the client’s network configuration using `ipconfig`.
+
+### Part 4: Connect an Access Point (Optional)
+- Extend the wireless network by connecting an AP to the router via Ethernet.
+- Disable the AP’s DHCP server and configure it within the same subnet.
+
+## Why wireless network
+A properly configured wireless network enhances security, prevents unauthorized access, and ensures reliable connectivity for devices.
+
+
