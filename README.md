@@ -500,3 +500,90 @@ Static and default routes provide manual control over network traffic, ensuring 
 
 
 
+#Scenario 11 Summary
+
+This guide provides the necessary steps to configure OSPF in a single area on Cisco routers, including basic configuration, verifying OSPF, and adjusting key settings like Router ID, passive interfaces, and metrics.
+
+### Key Steps
+
+#### Build the Network and Configure Basic Device Settings
+1. **Configure Basic Device Settings**  
+   Set the hostname, configure IP addresses on interfaces, and enable interfaces.
+
+   ```bash
+   hostname R1
+   ip address 192.168.12.1 255.255.255.0
+   no shutdown
+   ```
+
+#### Configure and Verify OSPF Routing
+2. **Enable OSPF Routing**  
+   Enable OSPF on each router and configure the network statements for area 0.
+
+   ```bash
+   router ospf 1
+   network 192.168.12.0 0.0.0.255 area 0
+   ```
+
+3. **Verify OSPF Configuration**  
+   Use the following commands to verify OSPF neighbors and routes.
+
+   ```bash
+   show ip ospf neighbor
+   show ip route ospf
+   ```
+
+#### Change Router ID Assignments
+4. **Set Router ID**  
+   Manually configure the Router ID to ensure a unique identifier.
+
+   ```bash
+   router ospf 1
+   router-id 1.1.1.1
+   ```
+
+5. **Verify Router ID**  
+   Check the Router ID to ensure it's correctly configured.
+
+   ```bash
+   show ip ospf
+   ```
+
+#### Configure OSPF Passive Interfaces
+6. **Set Passive Interfaces**  
+   Configure interfaces where OSPF should not form neighbor relationships.
+
+   ```bash
+   router ospf 1
+   passive-interface gigabitethernet0/1
+   ```
+
+7. **Verify Passive Interfaces**  
+   Use the command to verify the passive interfaces configuration.
+
+   ```bash
+   show ip ospf interface
+   ```
+
+#### Change OSPF Metrics
+8. **Adjust OSPF Cost**  
+   Change the OSPF cost on interfaces to influence routing decisions.
+
+   ```bash
+   interface gigabitethernet0/0
+   ip ospf cost 10
+   ```
+
+9. **Verify OSPF Metric**  
+   Check the updated OSPF metric.
+
+   ```bash
+   show ip ospf interface gigabitethernet0/0
+   ```
+
+---
+
+### Why Use OSPF?
+
+OSPF (Open Shortest Path First) is a widely used link-state routing protocol that provides fast convergence and scalability, making it ideal for larger, more complex networks. OSPF allows routers to dynamically exchange routing information, ensuring that the best paths are always used for data transmission. It also supports hierarchical network design through the use of areas, which helps in optimizing routing efficiency and reducing overhead. By using OSPF, network administrators can ensure efficient, scalable, and reliable routing across various types of networks.
+
