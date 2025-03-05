@@ -500,7 +500,7 @@ Static and default routes provide manual control over network traffic, ensuring 
 
 
 
-#Scenario 11 Summary
+# Scenario 11 Summary
 
 This guide provides the necessary steps to configure OSPF in a single area on Cisco routers, including basic configuration, verifying OSPF, and adjusting key settings like Router ID, passive interfaces, and metrics.
 
